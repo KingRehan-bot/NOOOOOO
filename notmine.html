@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>An Important Question 💔</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9, #e0f2f1);
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+    }
+
+    .bg-layer {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .float-emoji {
+      position: absolute;
+      animation: floatUp 7s ease-in infinite;
+      opacity: 0;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(100vh) scale(0.5); opacity: 0; }
+      10%  { opacity: 0.5; }
+      90%  { opacity: 0.3; }
+      100% { transform: translateY(-10vh) scale(1.3); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: white;
+      border-radius: 28px;
+      padding: 3rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 150, 100, 0.15);
+      max-width: 440px;
+      width: 92%;
+    }
+
+    .mascot {
+      font-size: 5rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      animation: wiggle 1.8s ease-in-out infinite;
+    }
+
+    @keyframes wiggle {
+      0%,100% { transform: rotate(-5deg); }
+      50%      { transform: rotate(5deg); }
+    }
+
+    h1 {
+      font-size: 1.65rem;
+      color: #2e7d32;
+      margin-bottom: 0.4rem;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      font-size: 0.93rem;
+      color: #aaa;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      min-height: 100px;
+    }
+
+    button {
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    #yes-btn {
+      background: linear-gradient(135deg, #66bb6a, #2e7d32);
+      color: white;
+      padding: 14px 32px;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 20px rgba(46,125,50,0.3);
+    }
+
+    #yes-btn:hover {
+      transform: scale(1.06);
+      box-shadow: 0 10px 28px rgba(46,125,50,0.45);
+    }
+
+    #no-btn {
+      background: #ffebee;
+      color: #c62828;
+      padding: 13px 28px;
+      font-size: 1rem;
+      box-shadow: 0 4px 14px rgba(198,40,40,0.15);
+      transform-origin: center;
+    }
+
+    #no-btn:hover { background: #ffcdd2; }
+
+    .yes-msg {
+      font-size: 0.8rem;
+      color: #bbb;
+      margin-top: 1rem;
+      min-height: 1.2em;
+    }
+
+    /* Hurray screen */
+    .hurray {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.7rem;
+      animation: popIn 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0.3); opacity: 0; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .hurray-emoji { font-size: 4.5rem; }
+
+    .hurray h2 {
+      font-size: 2.2rem;
+      color: #2e7d32;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+    }
+
+    .hurray p {
+      font-size: 1rem;
+      color: #555;
+      max-width: 280px;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-layer" id="bg-layer"></div>
+
+  <div class="card" id="card">
+    <span class="mascot" id="mascot">🐸</span>
+    <h1 id="main-q">Will you be my girlfriend? 💚</h1>
+    <p class="subtitle" id="sub">Choose wisely... or don't 😏</p>
+
+    <div class="buttons" id="buttons">
+      <button id="yes-btn" onclick="clickedYes()">Yes 💚</button>
+      <button id="no-btn" onclick="clickedNo()">No 💔</button>
+    </div>
+
+    <p class="yes-msg" id="yes-msg"></p>
+
+    <!-- Hurray screen -->
+    <div class="hurray" id="hurray">
+      <div class="hurray-emoji">🎊🥳🎉</div>
+      <h2>HURRAY!! 🎉</h2>
+      <p>You dodged it! Freedom tastes sweet 😂🍃</p>
+    </div>
+  </div>
+
+  <script>
+    let yesCount = 0;
+    let noSize = 1;
+
+    const taunts = [
+      "Oh so you like me? 😏",
+      "Getting comfortable huh? 😳",
+      "Still pressing YES? 👀",
+      "The NO button is growing... 😬",
+      "You can't stop now! 😂",
+      "The NO is MASSIVE 😱",
+      "It's taking over the screen! 🫣",
+      "NO is inevitable... 🌌",
+      "Just press NO already!! 💀",
+      "YOU BUILT THIS MONSTER 😭"
+    ];
+
+    function clickedYes() {
+      yesCount++;
+      noSize += 0.28;
+
+      const noBtn = document.getElementById('no-btn');
+      noBtn.style.transform = `scale(${noSize})`;
+      noBtn.style.transition = 'transform 0.35s cubic-bezier(0.34,1.56,0.64,1)';
+
+      const msg = taunts[Math.min(yesCount - 1, taunts.length - 1)];
+      document.getElementById('yes-msg').textContent = msg;
+
+      if (yesCount >= 5) {
+        const yesBtn = document.getElementById('yes-btn');
+        yesBtn.style.fontSize = `${Math.max(7, 18 - yesCount * 1.5)}px`;
+        yesBtn.style.opacity = `${Math.max(0.15, 1 - yesCount * 0.09)}`;
+        yesBtn.style.padding = '8px 16px';
+      }
+    }
+
+    function clickedNo() {
+      document.getElementById('buttons').style.display = 'none';
+      document.getElementById('yes-msg').style.display = 'none';
+      document.getElementById('sub').style.display = 'none';
+      document.getElementById('main-q').style.display = 'none';
+      document.getElementById('mascot').style.display = 'none';
+
+      document.getElementById('hurray').style.display = 'flex';
+
+      shootConfetti();
+    }
+
+    function shootConfetti() {
+      const bg = document.getElementById('bg-layer');
+      const emojis = ['🎉','🥳','🎊','🍃','💚','✨','🌿','🎈','🎆','😂'];
+      for (let i = 0; i < 35; i++) {
+        const el = document.createElement('div');
+        el.className = 'float-emoji';
+        el.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.fontSize = (1.2 + Math.random() * 2.2) + 'rem';
+        el.style.animationDelay = (Math.random() * 2.5) + 's';
+        el.style.animationDuration = (4 + Math.random() * 4) + 's';
+        bg.appendChild(el);
+      }
+    }
+
+    // Ambient floating leaves on load
+    (function initBg() {
+      const bg = document.getElementById('bg-layer');
+      const items = ['🍃','💚','🌿','✨'];
+      for (let i = 0; i < 10; i++) {
+        const el = document.createElement('div');
+        el.className = 'float-emoji';
+        el.textContent = items[Math.floor(Math.random() * items.length)];
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.fontSize = (1 + Math.random() * 1.5) + 'rem';
+        el.style.animationDelay = (Math.random() * 7) + 's';
+        el.style.animationDuration = (6 + Math.random() * 5) + 's';
+        bg.appendChild(el);
+      }
+    })();
+  </script>
+</body>
+</html>
